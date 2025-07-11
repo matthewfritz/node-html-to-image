@@ -26,6 +26,7 @@ export interface Options extends ScreenshotParams {
   timeout?: number;
   maxConcurrency?: number;
   clusterOptions?: object;
+  terminateProcessOnError?: boolean;
 }
 
 export interface MakeScreenshotParams {
