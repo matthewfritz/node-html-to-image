@@ -24,6 +24,7 @@ export interface Options extends ScreenshotParams {
   waitUntil?: PuppeteerLifeCycleEvent | PuppeteerLifeCycleEvent[];
   beforeScreenshot?: (page: Page) => void;
   timeout?: number;
+  maxConcurrency?: number;
   clusterOptions?: object;
 }
 
