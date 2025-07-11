@@ -17,14 +17,27 @@ export async function nodeHtmlToImage(options: Options) {
     puppeteerArgs = {},
     timeout = 30000,
     puppeteer = undefined,
+    maxConcurrency = 2,
+    clusterOptions = {},
   } = options;
 
-  const cluster: Cluster<ScreenshotParams> = await Cluster.launch({
+  /**
+   * Provides an object that gives us parity with the original default cluster arguments but allows us the
+   * flexibility to update some of the concurrency values directly.
+   */
+  const defaultClusterOptions = {
     concurrency: Cluster.CONCURRENCY_CONTEXT,
-    maxConcurrency: 2,
+    maxConcurrency,
     timeout,
     puppeteerOptions: { ...puppeteerArgs, headless: "shell" },
     puppeteer: puppeteer,
+  };
+
+  // TODO: break the cluster out of the nodeHtmlToImage() logic so we can leverage an already-running cluster when
+  // attempting to render the screenshots and take full advantage of the concurrency aspect
+  const cluster: Cluster<ScreenshotParams> = await Cluster.launch({
+    ...defaultClusterOptions,
+    ...clusterOptions,
   });
 
   const shouldBatch = Array.isArray(content);
@@ -56,6 +69,9 @@ export async function nodeHtmlToImage(options: Options) {
       }),
     );
     await cluster.idle();
+
+    // TODO: break this out along with the launching of the cluster so we're not closing and invalidating our
+    // available browser instances after the single Puppeteer request finishes
     await cluster.close();
 
     return shouldBatch
@@ -63,7 +79,11 @@ export async function nodeHtmlToImage(options: Options) {
       : screenshots[0].buffer;
   } catch (err) {
     console.error(err);
+
+    // TODO: same as the statement with the other "await cluster.close()" line; break this out into calling logic
     await cluster.close();
+
+    // TODO: NO!!!!!!! This terminates the process in which it is running and can lead to crash loops in K8s pods after timeouts.
     process.exit(1);
   }
 }
