@@ -23,12 +23,19 @@ export async function nodeHtmlToImage(options: Options) {
   } = options;
 
   /**
+   * Provides a default for "headless" operation based upon whether the "headless" property is included in the
+   * puppeteerArgs value so we can change the headed/headless run mode. If not, it falls-back to "shell" to maintain
+   * parity with the original package logic.
+   */
+  const headless = "headless" in puppeteerArgs ? puppeteerArgs.headless : "shell";
+
+  /**
    * Provides an object that gives us parity with the original default Puppeteer arguments but allows us the
    * flexibility to update some of the startup values directly.
    */
   const defaultPuppeteerOptions: PuppeteerNodeLaunchOptions = {
     ...puppeteerArgs,
-    headless: "shell",
+    headless,
   };
 
   /**
