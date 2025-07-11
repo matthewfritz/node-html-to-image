@@ -1,3 +1,4 @@
+import type { PuppeteerNodeLaunchOptions } from "puppeteer";
 import { Cluster } from "puppeteer-cluster";
 
 import { Screenshot } from "./models/Screenshot";
@@ -23,6 +24,15 @@ export async function nodeHtmlToImage(options: Options) {
   } = options;
 
   /**
+   * Provides an object that gives us parity with the original default Puppeteer arguments but allows us the
+   * flexibility to update some of the startup values directly.
+   */
+  const defaultPuppeteerOptions: PuppeteerNodeLaunchOptions = {
+    ...puppeteerArgs,
+    headless: "shell",
+  };
+
+  /**
    * Provides an object that gives us parity with the original default cluster arguments but allows us the
    * flexibility to update some of the concurrency values directly.
    */
@@ -30,7 +40,7 @@ export async function nodeHtmlToImage(options: Options) {
     concurrency: Cluster.CONCURRENCY_CONTEXT,
     maxConcurrency,
     timeout,
-    puppeteerOptions: { ...puppeteerArgs, headless: "shell" },
+    puppeteerOptions: defaultPuppeteerOptions,
     puppeteer: puppeteer,
   };
 
