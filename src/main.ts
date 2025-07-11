@@ -18,7 +18,6 @@ export async function nodeHtmlToImage(options: Options) {
     puppeteerArgs = {},
     timeout = 30000,
     puppeteer = undefined,
-    maxConcurrency = 2, // parity with original maxConcurrency: 2 option for puppeteer-cluster
     clusterOptions = {}, // parity with no additional options added for puppeteer-cluster by default
     terminateProcessOnError = true, // parity with the original process.exit(1) call on error
   } = options;
@@ -38,7 +37,7 @@ export async function nodeHtmlToImage(options: Options) {
    */
   const defaultClusterOptions = {
     concurrency: Cluster.CONCURRENCY_CONTEXT,
-    maxConcurrency,
+    maxConcurrency: 2,
     timeout,
     puppeteerOptions: defaultPuppeteerOptions,
     puppeteer: puppeteer,
