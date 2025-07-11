@@ -19,6 +19,7 @@ export async function nodeHtmlToImage(options: Options) {
     puppeteer = undefined,
     maxConcurrency = 2,
     clusterOptions = {},
+    terminateProcessOnError = true, // parity with the original process.exit(1) call on error
   } = options;
 
   /**
@@ -83,7 +84,11 @@ export async function nodeHtmlToImage(options: Options) {
     // TODO: same as the statement with the other "await cluster.close()" line; break this out into calling logic
     await cluster.close();
 
-    // TODO: NO!!!!!!! This terminates the process in which it is running and can lead to crash loops in K8s pods after timeouts.
-    process.exit(1);
+    // terminate the running process if we have been asked to do so; otherwise, give the calling logic the opportunity
+    // to capture and handle the error with a bubble-up throw
+    if (terminateProcessOnError) {
+      process.exit(1);
+    }
+    throw err;
   }
 }
