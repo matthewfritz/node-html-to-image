@@ -2,7 +2,7 @@
 
 **NOTE**: I forked this from [frinyvonnick/node-html-to-image](https://github.com/frinyvonnick/node-html-to-image) for the express purpose of refactoring the concurrency and Puppeteer clustering functionality.
 
-My fork is intended to allow the calling logic / service to have greater control over the Puppeteer operations and not auto-terminate clusters and processes to promote reuse in distributed environments. It is also intended to have parity with the way the original package functions by default even if the concurrency updates are not being leveraged.
+My fork is intended to allow the calling logic / service to have greater control over the Puppeteer operations and not auto-terminate clusters and processes to promote reuse in distributed environments. It is also intended to have drop-in parity with the way the original package functions by default even if the concurrency updates are not being leveraged.
 
 -- [matthewfritz](https://github.com/matthewfritz)
 
@@ -32,9 +32,9 @@ This module exposes a function that generates images (png, jpeg) from HTML. It u
 ## Install
 
 ```sh
-npm install node-html-to-image
+npm install @matthewfritz/node-html-to-image
 # or
-yarn add node-html-to-image
+yarn add @matthewfritz/node-html-to-image
 ```
 
 Note: When you install Puppeteer, it downloads a recent version of Chromium (~170MB Mac, ~282MB Linux, ~280MB Win) that is guaranteed to work with the API. 
