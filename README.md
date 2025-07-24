@@ -6,9 +6,9 @@ My fork is intended to allow the calling logic / service to have greater control
 
 The [original usage license](LICENSE) has also remained unmodified to ensure there is no sudden change in criteria when using this fork versus the original package.
 
-Much of the documentation has also remained the same with additive changes also made to describe new functionality.
+Much of the documentation has also remained the same with some reorganization and additive changes also made to describe new functionality.
 
--- [matthewfritz](https://github.com/matthewfritz)
+-- [@matthewfritz](https://github.com/matthewfritz)
 
 <p>&nbsp;</p>
 <p>
@@ -27,6 +27,30 @@ Much of the documentation has also remained the same with additive changes also 
 
 ### 🏠 [Homepage](https://github.com/matthewfritz/node-html-to-image)
 
+## Table of Contents
+
+- [Description](#description)
+- [Install](#install)
+- [Usage](#usage)
+  - [TypeScript Support](#typescript-support)
+  - [Options](#options)
+- [Examples](#examples)
+  - [Simple example](#simple-example)
+  - [Setting output image resolution](#setting-output-image-resolution)
+  - [Example with Handlebars](#example-with-handlebars)
+  - [Using Handlebars helpers](#using-handlebars-helpers)
+  - [Dealing with images](#dealing-with-images)
+  - [Using the buffer instead of saving to disk](#using-the-buffer-instead-of-saving-to-disk)
+  - [Generating multiple images](#generating-multiple-images)
+  - [Using different puppeteer libraries](#using-different-puppeteer-libraries)
+- [Run tests](#run-tests)
+- [Related](#related)
+  - [Libraries](#libraries)
+  - [Articles](#articles)
+- [Author](#author)
+- [Show your support](#show-your-support)
+- [License](#-license)
+
 
 ## Description
 
@@ -43,29 +67,6 @@ yarn add @matthewfritz/node-html-to-image
 Note: When you install Puppeteer, it downloads a recent version of Chromium (~170MB Mac, ~282MB Linux, ~280MB Win) that is guaranteed to work with the API. 
 
 ## Usage
-
-- [Simple example](#simple-example)
-- [TypeScript Support](#typescript-support)
-- [Options](#options)
-- [Setting output image resolution](#setting-output-image-resolution)
-- [Example with Handlebars](#example-with-handlebars)
-- [Using Handlebars helpers](#using-handlebars-helpers)
-- [Dealing with images](#dealing-with-images)
-- [Using the buffer instead of saving to disk](#using-the-buffer-instead-of-saving-to-disk)
-- [Generating multiple images](#generating-multiple-images)
-- [Using different puppeteer libraries](#using-different-puppeteer-libraries)
-
-### Simple example
-
-```js
-const nodeHtmlToImage = require('node-html-to-image')
-
-nodeHtmlToImage({
-  output: './image.png',
-  html: '<html><body>Hello world!</body></html>'
-})
-  .then(() => console.log('The image was created successfully!'))
-```
 
 ### TypeScript support
 
@@ -96,6 +97,19 @@ List of all available options:
 | handlebarsHelpers | The handlebarsHelpers property lets add custom logic to the templates using Handlebars sub-expressions. [Learn more](https://handlebarsjs.com/guide/builtin-helpers.html#sub-expressions).                             | object                                          | optional |
 | timeout           | Timeout for a [puppeteer-cluster](https://github.com/thomasdondorf/puppeteer-cluster#clusterlaunchoptions) (in `ms`). Defaults to `30000` (30 seconds).                                                                | number                                          | optional |
 
+## Examples
+
+### Simple example
+
+```js
+const nodeHtmlToImage = require('node-html-to-image')
+
+nodeHtmlToImage({
+  output: './image.png',
+  html: '<html><body>Hello world!</body></html>'
+})
+  .then(() => console.log('The image was created successfully!'))
+```
 
 ### Setting output image resolution
 
@@ -268,6 +282,12 @@ const image = await nodeHtmlToImage({
 })
 ```
 
+## Run tests
+
+```sh
+yarn test
+```
+
 ## Related
 
 ### Libraries
@@ -279,23 +299,21 @@ const image = await nodeHtmlToImage({
 - [Generate images from HTML in Node.js](https://yvonnickfrin.dev/node-html-to-image)
 - [node-html-to-image v1.2 is out 🎉](https://dev.to/yvonnickfrin/node-html-to-image-v1-2-is-out-42f4)
 
-## Run tests
-
-```sh
-yarn test
-```
-
 ## Author
+
+### Updates for Concurrency + Puppeteer Clustering
+
+👤 **Matthew Fritz <hello@matthewfritz.net>**
+
+* GitHub: [@matthewfritz](https://github.com/matthewfritz)
+
+### Original Package
 
 👤 **FRIN Yvonnick <frin.yvonnick@gmail.com>**
 
 * Website: [https://yvonnickfrin.dev](https://yvonnickfrin.dev)
 * Twitter: [@yvonnickfrin](https://twitter.com/yvonnickfrin)
 * Github: [@frinyvonnick](https://github.com/frinyvonnick)
-
-## 🤝 Contributing
-
-Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page](https://github.com/frinyvonnick/node-html-to-image/issues).
 
 ## Show your support
 
@@ -307,4 +325,4 @@ Copyright © 2019 [FRIN Yvonnick <frin.yvonnick@gmail.com>](https://github.com/f
 This project is [Apache--2.0](https://github.com/frinyvonnick/node-html-to-image/blob/master/LICENSE) licensed.
 
 ***
-_This README was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_
+_The [original version of this README](https://github.com/frinyvonnick/node-html-to-image/blob/master/README.md) was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_
