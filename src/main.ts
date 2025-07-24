@@ -24,6 +24,8 @@ export async function nodeHtmlToImage(options: Options) {
     triggerClusterCloseAfterScreenshots = true, // parity with the original cluster.close() call post-screenshots
     triggerClusterCloseOnError = true, // parity with the original cluster.close() call after an error
     terminateProcessOnError = true, // parity with the original process.exit(1) call on error
+    errorLogLinePrefix = undefined, // parity with no prefix on original logged error line
+    additionalDataToLogWithError = undefined, // parity with no additional data being logged on error
   } = options;
 
   /**
@@ -103,7 +105,16 @@ export async function nodeHtmlToImage(options: Options) {
       ? screenshots.map(({ buffer }) => buffer)
       : screenshots[0].buffer;
   } catch (err) {
-    console.error(err);
+    // allow prefix for easier identification of errors that resulted from the screenshot process and also allow any
+    // additional data to be supplied in the error log as necessary
+    const errorLogParts = [ err ];
+    if (errorLogLinePrefix !== undefined) {
+      errorLogParts.unshift(errorLogLinePrefix);
+    }
+    if (additionalDataToLogWithError !== undefined) {
+      errorLogParts.push(additionalDataToLogWithError);
+    }
+    console.error(...errorLogParts);
 
     // TODO: same as the statement with the other "await cluster.close()" line; break this out into calling logic
     if (triggerClusterCloseOnError) {

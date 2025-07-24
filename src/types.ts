@@ -31,6 +31,8 @@ export interface Options extends ScreenshotParams {
   triggerClusterCloseAfterScreenshots?: boolean;
   triggerClusterCloseOnError?: boolean;
   terminateProcessOnError?: boolean;
+  errorLogLinePrefix?: string;
+  additionalDataToLogWithError?: any;
 }
 
 export interface MakeScreenshotParams {
