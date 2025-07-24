@@ -19,6 +19,9 @@ export async function nodeHtmlToImage(options: Options) {
     timeout = 30000,
     puppeteer = undefined,
     clusterOptions = {}, // parity with no additional options added for puppeteer-cluster by default
+    triggerClusterIdleAfterScreenshots = true, // parity with the original cluster.idle() call post-screenshots
+    triggerClusterCloseAfterScreenshots = true, // parity with the original cluster.close() call post-screenshots
+    triggerClusterCloseOnError = true, // parity with the original cluster.close() call after an error
     terminateProcessOnError = true, // parity with the original process.exit(1) call on error
   } = options;
 
@@ -85,11 +88,15 @@ export async function nodeHtmlToImage(options: Options) {
         );
       }),
     );
-    await cluster.idle();
+    if (triggerClusterIdleAfterScreenshots) {
+      await cluster.idle();
+    }
 
     // TODO: break this out along with the launching of the cluster so we're not closing and invalidating our
     // available browser instances after the single Puppeteer request finishes
-    await cluster.close();
+    if (triggerClusterCloseAfterScreenshots) {
+      await cluster.close();
+    }
 
     return shouldBatch
       ? screenshots.map(({ buffer }) => buffer)
@@ -98,7 +105,9 @@ export async function nodeHtmlToImage(options: Options) {
     console.error(err);
 
     // TODO: same as the statement with the other "await cluster.close()" line; break this out into calling logic
-    await cluster.close();
+    if (triggerClusterCloseOnError) {
+      await cluster.close();
+    }
 
     // terminate the running process if we have been asked to do so; otherwise, give the calling logic the opportunity
     // to capture and handle the error with a bubble-up throw

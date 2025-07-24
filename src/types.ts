@@ -25,6 +25,9 @@ export interface Options extends ScreenshotParams {
   beforeScreenshot?: (page: Page) => void;
   timeout?: number;
   clusterOptions?: object;
+  triggerClusterIdleAfterScreenshots?: boolean;
+  triggerClusterCloseAfterScreenshots?: boolean;
+  triggerClusterCloseOnError?: boolean;
   terminateProcessOnError?: boolean;
 }
 
