@@ -78,11 +78,11 @@ import nodeHtmlToImage from 'node-html-to-image'
 
 ### Options
 
-List of all available options:
+List of all available **original** options:
 
 | option            | description                                                                                                                                                                                                            | type                                            | required    |
 |-------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------|-------------|
-| output            | The ouput path for generated image                                                                                                                                                                                     | string                                          | optional    |
+| output            | The output path for generated image                                                                                                                                                                                    | string                                          | optional    |
 | html              | The html used to generate image content                                                                                                                                                                                | string                                          | required    |
 | type              | The type of the generated image                                                                                                                                                                                        | jpeg or png (default: png)                      | optional    |
 | quality           | The quality of the generated image (only applicable to jpg)                                                                                                                                                            | number (default: 80)                            | optional    |
@@ -96,6 +96,21 @@ List of all available options:
 | selector          | The selector property lets you target a specific element to perform the screenshot on. (default `body`)                                                                                                                | string                                          | optional    |
 | handlebarsHelpers | The handlebarsHelpers property lets add custom logic to the templates using Handlebars sub-expressions. [Learn more](https://handlebarsjs.com/guide/builtin-helpers.html#sub-expressions).                             | object                                          | optional |
 | timeout           | Timeout for a [puppeteer-cluster](https://github.com/thomasdondorf/puppeteer-cluster#clusterlaunchoptions) (in `ms`). Defaults to `30000` (30 seconds).                                                                | number                                          | optional |
+
+
+List of all available **added** options with set defaults to allow drop-in parity with original package:
+
+| option                              | description                                                                                                                                                                                          | type                      | required    |
+|-------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------|-------------|
+| cluster                             | A running [puppeteer-cluster](https://github.com/thomasdondorf/puppeteer-cluster#usage) instance to use instead of spawning a new one by default during the `nodeHtmlToImage()` call                 | Cluster                   | optional    |
+| clusterOptions                      | An object containing configuration options for a default [puppeteer-cluster](https://github.com/thomasdondorf/puppeteer-cluster#usage) instance if not supplying the `cluster` argument              | object                    | optional    |
+| triggerClusterIdleAfterScreenshots  | Whether to call the `idle()` method on the cluster after the screenshot process has finished successfully                                                                                            | boolean (default: `true`) | optional    |
+| triggerClusterCloseAfterScreenshots | Whether to call the `close()` method on the cluster after the screenshot process has finished successfully                                                                                           | boolean (default: `true`) | optional    |
+| triggerClusterCloseOnError          | Whether to call the `close()` method on the cluster after an error has occurred during the screenshot operation                                                                                      | boolean (default: `true`) | optional    |
+| terminateProcessOnError             | Whether to call `process.exit(1)` to terminate the process after an error has occurred during the screenshot operation                                                                               | boolean (default: `true`) | optional    |
+| errorLogLinePrefix                  | A string prefix to write to the console line logged when an error has occurred during the screenshot operation                                                                                       | string                    | optional    |
+| additionalDataToLogWithError        | Any additional data to write in the console line logged when an error has occurred during the screenshot operation                                                                                   | any                       | optional    |
+
 
 ## Examples
 
