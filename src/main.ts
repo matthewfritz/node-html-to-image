@@ -91,12 +91,11 @@ export async function nodeHtmlToImage(options: Options) {
         );
       }),
     );
+
+    // tell the cluster to idle and/or close itself after the screenshot process as necessary
     if (triggerClusterIdleAfterScreenshots) {
       await screenshotCluster.idle();
     }
-
-    // TODO: break this out along with the launching of the cluster so we're not closing and invalidating our
-    // available browser instances after the single Puppeteer request finishes
     if (triggerClusterCloseAfterScreenshots) {
       await screenshotCluster.close();
     }
@@ -116,7 +115,7 @@ export async function nodeHtmlToImage(options: Options) {
     }
     console.error(...errorLogParts);
 
-    // TODO: same as the statement with the other "await cluster.close()" line; break this out into calling logic
+    // tell the cluster to close itself on error as necessary
     if (triggerClusterCloseOnError) {
       await screenshotCluster.close();
     }
