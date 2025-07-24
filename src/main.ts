@@ -23,7 +23,7 @@ export async function nodeHtmlToImage(options: Options) {
     triggerClusterIdleAfterScreenshots = true, // parity with the original cluster.idle() call post-screenshots
     triggerClusterCloseAfterScreenshots = true, // parity with the original cluster.close() call post-screenshots
     triggerClusterCloseOnError = true, // parity with the original cluster.close() call after an error
-    terminateProcessOnError = true, // parity with the original process.exit(1) call on error
+    triggerProcessExitOnError = true, // parity with the original process.exit(1) call on error
     errorLogLinePrefix = undefined, // parity with no prefix on original logged error line
     errorLogLineAdditionalData = undefined, // parity with no additional data being logged on error
   } = options;
@@ -122,7 +122,7 @@ export async function nodeHtmlToImage(options: Options) {
 
     // terminate the running process if we have been asked to do so; otherwise, give the calling logic the opportunity
     // to capture and handle the error with a bubble-up throw
-    if (terminateProcessOnError) {
+    if (triggerProcessExitOnError) {
       process.exit(1);
     }
     throw err;

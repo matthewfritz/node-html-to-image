@@ -30,7 +30,7 @@ export interface Options extends ScreenshotParams {
   triggerClusterIdleAfterScreenshots?: boolean;
   triggerClusterCloseAfterScreenshots?: boolean;
   triggerClusterCloseOnError?: boolean;
-  terminateProcessOnError?: boolean;
+  triggerProcessExitOnError?: boolean;
   errorLogLinePrefix?: string;
   errorLogLineAdditionalData?: any;
 }
