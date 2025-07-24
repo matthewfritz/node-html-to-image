@@ -4,25 +4,28 @@
 
 My fork is intended to allow the calling logic / service to have greater control over the Puppeteer operations and not auto-terminate clusters and processes to promote reuse in distributed environments. It is also intended to have drop-in parity with the way the original package functions by default even if the concurrency updates are not being leveraged.
 
+The [original usage license](LICENSE) has also remained unmodified to ensure there is no sudden change in criteria when using this fork versus the original package.
+
+Much of the documentation has also remained the same with additive changes also made to describe new functionality.
+
 -- [matthewfritz](https://github.com/matthewfritz)
 
 <p>&nbsp;</p>
 <p>
-  <img alt="Version" src="https://img.shields.io/badge/version-3.1.0-blue.svg?cacheSeconds=2592000" />
-  <a href="https://github.com/frinyvonnick/node-html-to-image#readme" target="_blank">
+  <a href="https://github.com/matthewfritz/node-html-to-image/releases" target="_blank">
+    <img alt="Version" src="https://img.shields.io/badge/version-1.0.0-blue.svg?cacheSeconds=2592000" />
+  </a>
+  <a href="https://github.com/matthewfritz/node-html-to-image#readme" target="_blank">
     <img alt="Documentation" src="https://img.shields.io/badge/documentation-yes-brightgreen.svg" />
   </a>
-  <a href="https://github.com/frinyvonnick/node-html-to-image/blob/master/LICENSE" target="_blank">
+  <a href="https://github.com/matthewfritz/node-html-to-image/blob/master/LICENSE" target="_blank">
     <img alt="License: Apache--2.0" src="https://img.shields.io/badge/License-Apache--2.0-yellow.svg" />
-  </a>
-  <a href="https://twitter.com/yvonnickfrin" target="_blank">
-    <img alt="Twitter: yvonnickfrin" src="https://img.shields.io/twitter/follow/yvonnickfrin.svg?style=social" />
   </a>
 </p>
 
 > A Node.js library that generates images from HTML
 
-### 🏠 [Homepage](https://github.com/frinyvonnick/node-html-to-image)
+### 🏠 [Homepage](https://github.com/matthewfritz/node-html-to-image)
 
 
 ## Description
