@@ -108,8 +108,8 @@ List of all available **added** options with set defaults to allow drop-in parit
 | triggerClusterCloseAfterScreenshots | Whether to call the `close()` method on the cluster after the screenshot process has finished successfully                                                                                           | boolean (default: `true`) | optional    |
 | triggerClusterCloseOnError          | Whether to call the `close()` method on the cluster after an error has occurred during the screenshot operation                                                                                      | boolean (default: `true`) | optional    |
 | terminateProcessOnError             | Whether to call `process.exit(1)` to terminate the process after an error has occurred during the screenshot operation                                                                               | boolean (default: `true`) | optional    |
-| errorLogLinePrefix                  | A string prefix to write to the console line logged when an error has occurred during the screenshot operation                                                                                       | string                    | optional    |
-| additionalDataToLogWithError        | Any additional data to write in the console line logged when an error has occurred during the screenshot operation                                                                                   | any                       | optional    |
+| errorLogLinePrefix                  | A string prefix to write within the console line logged when an error has occurred during the screenshot operation                                                                                   | string                    | optional    |
+| errorLogLineAdditionalData          | Any additional data to write within the console line logged when an error has occurred during the screenshot operation                                                                               | any                       | optional    |
 
 
 ## Examples

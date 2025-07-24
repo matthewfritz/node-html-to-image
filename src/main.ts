@@ -25,7 +25,7 @@ export async function nodeHtmlToImage(options: Options) {
     triggerClusterCloseOnError = true, // parity with the original cluster.close() call after an error
     terminateProcessOnError = true, // parity with the original process.exit(1) call on error
     errorLogLinePrefix = undefined, // parity with no prefix on original logged error line
-    additionalDataToLogWithError = undefined, // parity with no additional data being logged on error
+    errorLogLineAdditionalData = undefined, // parity with no additional data being logged on error
   } = options;
 
   /**
@@ -110,8 +110,8 @@ export async function nodeHtmlToImage(options: Options) {
     if (errorLogLinePrefix !== undefined) {
       errorLogParts.unshift(errorLogLinePrefix);
     }
-    if (additionalDataToLogWithError !== undefined) {
-      errorLogParts.push(additionalDataToLogWithError);
+    if (errorLogLineAdditionalData !== undefined) {
+      errorLogParts.push(errorLogLineAdditionalData);
     }
     console.error(...errorLogParts);
 
