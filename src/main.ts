@@ -3,7 +3,7 @@ import { Cluster } from "puppeteer-cluster";
 
 import { Screenshot } from "./models/Screenshot";
 import { makeScreenshot } from "./screenshot";
-import { Options, ScreenshotParams } from "./types";
+import { Options } from "./types";
 
 export async function nodeHtmlToImage(options: Options) {
   const {
@@ -18,6 +18,7 @@ export async function nodeHtmlToImage(options: Options) {
     puppeteerArgs = {},
     timeout = 30000,
     puppeteer = undefined,
+    cluster = undefined, // parity with no puppeteer-cluster instance supplied from caller by default
     clusterOptions = {}, // parity with no additional options added for puppeteer-cluster by default
     triggerClusterIdleAfterScreenshots = true, // parity with the original cluster.idle() call post-screenshots
     triggerClusterCloseAfterScreenshots = true, // parity with the original cluster.close() call post-screenshots
@@ -53,21 +54,21 @@ export async function nodeHtmlToImage(options: Options) {
     puppeteer: puppeteer,
   };
 
-  // TODO: break the cluster out of the nodeHtmlToImage() logic so we can leverage an already-running cluster when
-  // attempting to render the screenshots and take full advantage of the concurrency aspect
-  const cluster: Cluster<ScreenshotParams> = await Cluster.launch({
+  const shouldBatch = Array.isArray(content);
+  const contents = shouldBatch ? content : [{ ...content, output, selector }];
+
+  // leverage an already-running cluster (if it has been supplied) while attempting to render the screenshots and take
+  // full advantage of the concurrency aspect; otherwise, launch a default one with the supplied options as before
+  const screenshotCluster: Cluster = cluster ?? await Cluster.launch({
     ...defaultClusterOptions,
     ...clusterOptions,
   });
-
-  const shouldBatch = Array.isArray(content);
-  const contents = shouldBatch ? content : [{ ...content, output, selector }];
 
   try {
     const screenshots: Array<Screenshot> = await Promise.all(
       contents.map((content) => {
         const { output, selector: contentSelector, ...pageContent } = content;
-        return cluster.execute(
+        return screenshotCluster.execute(
           {
             html,
             encoding,
@@ -89,13 +90,13 @@ export async function nodeHtmlToImage(options: Options) {
       }),
     );
     if (triggerClusterIdleAfterScreenshots) {
-      await cluster.idle();
+      await screenshotCluster.idle();
     }
 
     // TODO: break this out along with the launching of the cluster so we're not closing and invalidating our
     // available browser instances after the single Puppeteer request finishes
     if (triggerClusterCloseAfterScreenshots) {
-      await cluster.close();
+      await screenshotCluster.close();
     }
 
     return shouldBatch
@@ -106,7 +107,7 @@ export async function nodeHtmlToImage(options: Options) {
 
     // TODO: same as the statement with the other "await cluster.close()" line; break this out into calling logic
     if (triggerClusterCloseOnError) {
-      await cluster.close();
+      await screenshotCluster.close();
     }
 
     // terminate the running process if we have been asked to do so; otherwise, give the calling logic the opportunity
