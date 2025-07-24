@@ -1,6 +1,8 @@
 <h1 align="center">Welcome to node-html-to-image 🌄</h1>
 
-**NOTE**: I forked this from [frinyvonnick/node-html-to-image](https://github.com/frinyvonnick/node-html-to-image) for the express purpose of refactoring the concurrency and Puppeteer clustering functionality. My fork is intended to allow the calling logic / service to have greater control over the Puppeteer operations and not auto-terminate clusters and processes to promote reuse in distributed environments.
+**NOTE**: I forked this from [frinyvonnick/node-html-to-image](https://github.com/frinyvonnick/node-html-to-image) for the express purpose of refactoring the concurrency and Puppeteer clustering functionality.
+
+My fork is intended to allow the calling logic / service to have greater control over the Puppeteer operations and not auto-terminate clusters and processes to promote reuse in distributed environments. It is also intended to have parity with the way the original package functions by default even if the concurrency updates are not being leveraged.
 
 -- [matthewfritz](https://github.com/matthewfritz)
 
