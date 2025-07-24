@@ -1,6 +1,6 @@
 <h1 align="center">Welcome to node-html-to-image 🌄</h1>
 
-**NOTE**: This was forked from [frinyvonnick/node-html-to-image](https://github.com/frinyvonnick/node-html-to-image) for the express purpose of refactoring the concurrency and Puppeteer clustering functionality. It is intended to allow the calling logic / service to have greater control over the Puppeteer operations and not auto-terminate clusters and processes to promote reuse in distributed environments.
+**NOTE**: I forked this from [frinyvonnick/node-html-to-image](https://github.com/frinyvonnick/node-html-to-image) for the express purpose of refactoring the concurrency and Puppeteer clustering functionality. My fork is intended to allow the calling logic / service to have greater control over the Puppeteer operations and not auto-terminate clusters and processes to promote reuse in distributed environments.
 
 <p>
   <img alt="Version" src="https://img.shields.io/badge/version-3.1.0-blue.svg?cacheSeconds=2592000" />
