@@ -424,7 +424,7 @@ yarn test
 
 ## Author
 
-### Updates for Concurrency + Puppeteer Clustering
+### Custom Concurrency + Cluster Control
 
 👤 **Matthew Fritz <hello@matthewfritz.net>**
 
