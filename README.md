@@ -1,20 +1,57 @@
 <h1 align="center">Welcome to node-html-to-image 🌄</h1>
+
+**NOTE**: I forked this from [frinyvonnick/node-html-to-image](https://github.com/frinyvonnick/node-html-to-image) - _Release v5.0.0_ ([original tag commit](https://github.com/frinyvonnick/node-html-to-image/commit/d51edae00fe11df2fd1b27ac4c940de5aae0d516) | [original tag release](https://github.com/frinyvonnick/node-html-to-image/releases/tag/v5.0.0) | [up-to-date diff](https://github.com/frinyvonnick/node-html-to-image/compare/d51edae00fe11df2fd1b27ac4c940de5aae0d516...matthewfritz:node-html-to-image:master)) for the express purpose of refactoring the concurrency and Puppeteer clustering functionality.
+
+My fork is intended to allow the calling logic / service to have greater control over the Puppeteer operations and not auto-terminate clusters and processes to promote reuse in distributed environments. It is also intended to have drop-in parity with the way the original package functions by default even if the concurrency updates are not being leveraged.
+
+The [original usage license](LICENSE) has also remained unmodified to ensure there is no sudden change in criteria when using this fork versus the original package.
+
+Much of the documentation has also remained the same with some reorganization and additive changes also made to describe new functionality.
+
+-- [@matthewfritz](https://github.com/matthewfritz)
+
+<p>&nbsp;</p>
 <p>
-  <img alt="Version" src="https://img.shields.io/badge/version-3.1.0-blue.svg?cacheSeconds=2592000" />
-  <a href="https://github.com/frinyvonnick/node-html-to-image#readme" target="_blank">
+  <a href="https://github.com/matthewfritz/node-html-to-image/releases" target="_blank">
+    <img alt="Version" src="https://img.shields.io/badge/version-1.0.0-blue.svg?cacheSeconds=2592000" />
+  </a>
+  <a href="https://github.com/matthewfritz/node-html-to-image#readme" target="_blank">
     <img alt="Documentation" src="https://img.shields.io/badge/documentation-yes-brightgreen.svg" />
   </a>
-  <a href="https://github.com/frinyvonnick/node-html-to-image/blob/master/LICENSE" target="_blank">
+  <a href="https://github.com/matthewfritz/node-html-to-image/blob/master/LICENSE" target="_blank">
     <img alt="License: Apache--2.0" src="https://img.shields.io/badge/License-Apache--2.0-yellow.svg" />
-  </a>
-  <a href="https://twitter.com/yvonnickfrin" target="_blank">
-    <img alt="Twitter: yvonnickfrin" src="https://img.shields.io/twitter/follow/yvonnickfrin.svg?style=social" />
   </a>
 </p>
 
 > A Node.js library that generates images from HTML
 
-### 🏠 [Homepage](https://github.com/frinyvonnick/node-html-to-image)
+### 🏠 [Homepage](https://github.com/matthewfritz/node-html-to-image)
+
+## Table of Contents
+
+- [Description](#description)
+- [Install](#install)
+- [Usage](#usage)
+  - [TypeScript Support](#typescript-support)
+  - [Options](#options)
+- [Examples](#examples)
+  - [Simple example](#simple-example)
+  - [Setting output image resolution](#setting-output-image-resolution)
+  - [Example with Handlebars](#example-with-handlebars)
+  - [Using Handlebars helpers](#using-handlebars-helpers)
+  - [Dealing with images](#dealing-with-images)
+  - [Using the buffer instead of saving to disk](#using-the-buffer-instead-of-saving-to-disk)
+  - [Generating multiple images](#generating-multiple-images)
+  - [Using different puppeteer libraries](#using-different-puppeteer-libraries)
+  - [Handling errors instead of terminating the process automatically](#handling-errors-instead-of-terminating-the-process-automatically)
+  - [Using your own puppeteer-cluster instance](#using-your-own-puppteer-cluster-instance)
+- [Run tests](#run-tests)
+- [Related](#related)
+  - [Libraries](#libraries)
+  - [Articles](#articles)
+- [Author](#author)
+- [Show your support](#show-your-support)
+- [License](#-license)
 
 
 ## Description
@@ -24,37 +61,14 @@ This module exposes a function that generates images (png, jpeg) from HTML. It u
 ## Install
 
 ```sh
-npm install node-html-to-image
+npm install @matthewfritz/node-html-to-image
 # or
-yarn add node-html-to-image
+yarn add @matthewfritz/node-html-to-image
 ```
 
 Note: When you install Puppeteer, it downloads a recent version of Chromium (~170MB Mac, ~282MB Linux, ~280MB Win) that is guaranteed to work with the API. 
 
 ## Usage
-
-- [Simple example](#simple-example)
-- [TypeScript Support](#typescript-support)
-- [Options](#options)
-- [Setting output image resolution](#setting-output-image-resolution)
-- [Example with Handlebars](#example-with-handlebars)
-- [Using Handlebars helpers](#using-handlebars-helpers)
-- [Dealing with images](#dealing-with-images)
-- [Using the buffer instead of saving to disk](#using-the-buffer-instead-of-saving-to-disk)
-- [Generating multiple images](#generating-multiple-images)
-- [Using different puppeteer libraries](#using-different-puppeteer-libraries)
-
-### Simple example
-
-```js
-const nodeHtmlToImage = require('node-html-to-image')
-
-nodeHtmlToImage({
-  output: './image.png',
-  html: '<html><body>Hello world!</body></html>'
-})
-  .then(() => console.log('The image was created successfully!'))
-```
 
 ### TypeScript support
 
@@ -66,11 +80,11 @@ import nodeHtmlToImage from 'node-html-to-image'
 
 ### Options
 
-List of all available options:
+List of all available **original** options:
 
 | option            | description                                                                                                                                                                                                            | type                                            | required    |
 |-------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------|-------------|
-| output            | The ouput path for generated image                                                                                                                                                                                     | string                                          | optional    |
+| output            | The output path for generated image                                                                                                                                                                                    | string                                          | optional    |
 | html              | The html used to generate image content                                                                                                                                                                                | string                                          | required    |
 | type              | The type of the generated image                                                                                                                                                                                        | jpeg or png (default: png)                      | optional    |
 | quality           | The quality of the generated image (only applicable to jpg)                                                                                                                                                            | number (default: 80)                            | optional    |
@@ -85,6 +99,34 @@ List of all available options:
 | handlebarsHelpers | The handlebarsHelpers property lets add custom logic to the templates using Handlebars sub-expressions. [Learn more](https://handlebarsjs.com/guide/builtin-helpers.html#sub-expressions).                             | object                                          | optional |
 | timeout           | Timeout for a [puppeteer-cluster](https://github.com/thomasdondorf/puppeteer-cluster#clusterlaunchoptions) (in `ms`). Defaults to `30000` (30 seconds).                                                                | number                                          | optional |
 
+
+List of all available **added** options with set defaults to allow drop-in parity with original package:
+
+| option                              | description                                                                                                                                                                                                         | type                      | required    |
+|-------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------|-------------|
+| cluster                             | A [running puppeteer-cluster instance](https://github.com/thomasdondorf/puppeteer-cluster#usage) to use instead of spawning a new one by default within the `nodeHtmlToImage()` call                                | Cluster                   | optional    |
+| clusterOptions                      | An object containing [configuration options for the default puppeteer-cluster instance](https://github.com/thomasdondorf/puppeteer-cluster#clusterlaunchoptions) spawned when not supplying the `cluster` argument  | object                    | optional    |
+| triggerClusterIdleAfterScreenshots  | Whether to call the `idle()` method on the cluster after the screenshot process has finished successfully                                                                                                           | boolean (default: `true`) | optional    |
+| triggerClusterCloseAfterScreenshots | Whether to call the `close()` method on the cluster after the screenshot process has finished successfully                                                                                                          | boolean (default: `true`) | optional    |
+| triggerClusterCloseOnError          | Whether to call the `close()` method on the cluster after an error has occurred during the screenshot operation                                                                                                     | boolean (default: `true`) | optional    |
+| triggerProcessExitOnError           | Whether to call `process.exit(1)` to terminate the process after an error has occurred during the screenshot operation                                                                                              | boolean (default: `true`) | optional    |
+| errorLogLinePrefix                  | A string prefix to write within the console line logged when an error has occurred during the screenshot operation                                                                                                  | string                    | optional    |
+| errorLogLineAdditionalData          | Any additional data to write within the console line logged when an error has occurred during the screenshot operation                                                                                              | any                       | optional    |
+
+
+## Examples
+
+### Simple example
+
+```js
+const nodeHtmlToImage = require('node-html-to-image')
+
+nodeHtmlToImage({
+  output: './image.png',
+  html: '<html><body>Hello world!</body></html>'
+})
+  .then(() => console.log('The image was created successfully!'))
+```
 
 ### Setting output image resolution
 
@@ -257,6 +299,118 @@ const image = await nodeHtmlToImage({
 })
 ```
 
+### Handling errors instead of terminating the process automatically
+
+You may want to handle errors directly instead of terminating the process by default when a problem has occurred.
+
+For that, we use the `triggerProcessExitOnError` boolean option and then wrap the call in a `try...catch` statement:
+
+```js
+const nodeHtmlToImage = require('node-html-to-image')
+
+try {
+  const image = await nodeHtmlToImage({
+    html: '<html><body><div>Hello</div></body></html>',
+
+    // suppress automatic process.exit(1) behavior on error
+    triggerProcessExitOnError: false,
+  });
+} catch (err) {
+  // handle the error without terminating the process automatically
+}
+```
+
+### Using your own puppteer-cluster instance
+
+Sometimes you don't want to spawn the default `puppeteer-cluster` instance during the `nodeHtmlToImage()` call but rather use your own.
+
+The way we handle this is to supply the `cluster` option as well set the three `triggerCluster` booleans to `false`.
+
+This means you can have complete control over the concurrent behavior and configuration of the cluster itself:
+
+```js
+const { Cluster } = require('puppeteer-cluster');
+const nodeHtmlToImage = require('node-html-to-image');
+
+(async () => {
+  // start the cluster manually before generating the screenshot
+  // https://github.com/thomasdondorf/puppeteer-cluster#clusterlaunchoptions
+  const screenshotCluster = await Cluster.launch({
+    concurrency: Cluster.CONCURRENCY_CONTEXT,
+    maxConcurrency: 2,
+  });
+
+  // take the screenshot with our custom cluster
+  const image = await nodeHtmlToImage({
+    html: '<html><body><div>Hello</div></body></html>',
+    cluster: screenshotCluster,
+
+    // suppress automatic cluster idling behavior on success
+    triggerClusterIdleAfterScreenshots: false,
+
+    // suppress automatic cluster closing behavior on success
+    triggerClusterCloseAfterScreenshots: false,
+
+    // suppress automatic cluster closing behavior on error
+    triggerClusterCloseOnError: false,
+  });
+
+  // idle and close the cluster manually
+  await cluster.idle();
+  await cluster.close();
+})();
+```
+
+You can of course opt to leave out the booleans and allow `nodeHtmlToImage()` to provide that default functionality. However, the caveat is that you will not be able to re-use the cluster and therefore not be able to support more in-depth distributed operations as a result, as you'll need to start a fresh cluster and therefore a fresh Puppeteer instance each time you want to call the function.
+
+You can also combine this with [handling errors directly instead of exiting the process](#handling-errors-instead-of-terminating-the-process-automatically) to gain additional control when the screenshot operation has failed:
+
+```js
+const { Cluster } = require('puppeteer-cluster');
+const nodeHtmlToImage = require('node-html-to-image');
+
+(async () => {
+  // start the cluster manually before generating the screenshot
+  // https://github.com/thomasdondorf/puppeteer-cluster#clusterlaunchoptions
+  const screenshotCluster = await Cluster.launch({
+    concurrency: Cluster.CONCURRENCY_CONTEXT,
+    maxConcurrency: 2,
+  });
+
+  try {
+    // attempt to take the screenshot with our custom cluster
+    const image = await nodeHtmlToImage({
+      html: '<html><body><div>Hello</div></body></html>',
+      cluster: screenshotCluster,
+
+      // suppress automatic cluster idling behavior on success
+      triggerClusterIdleAfterScreenshots: false,
+
+      // suppress automatic cluster closing behavior on success
+      triggerClusterCloseAfterScreenshots: false,
+
+      // suppress automatic cluster closing behavior on error
+      triggerClusterCloseOnError: false,
+
+      // suppress automatic process.exit(1) behavior on error
+      triggerProcessExitOnError: false,
+    });
+  } catch (err) {
+    // handle the error gracefully
+  }
+
+  // idle and close the cluster manually
+  await cluster.idle();
+  await cluster.close();
+})();
+```
+
+## Run tests
+
+```sh
+yarn test
+```
+
 ## Related
 
 ### Libraries
@@ -268,23 +422,21 @@ const image = await nodeHtmlToImage({
 - [Generate images from HTML in Node.js](https://yvonnickfrin.dev/node-html-to-image)
 - [node-html-to-image v1.2 is out 🎉](https://dev.to/yvonnickfrin/node-html-to-image-v1-2-is-out-42f4)
 
-## Run tests
-
-```sh
-yarn test
-```
-
 ## Author
+
+### Custom Concurrency + Cluster Control
+
+👤 **Matthew Fritz <hello@matthewfritz.net>**
+
+* GitHub: [@matthewfritz](https://github.com/matthewfritz)
+
+### Original Package
 
 👤 **FRIN Yvonnick <frin.yvonnick@gmail.com>**
 
 * Website: [https://yvonnickfrin.dev](https://yvonnickfrin.dev)
 * Twitter: [@yvonnickfrin](https://twitter.com/yvonnickfrin)
 * Github: [@frinyvonnick](https://github.com/frinyvonnick)
-
-## 🤝 Contributing
-
-Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page](https://github.com/frinyvonnick/node-html-to-image/issues).
 
 ## Show your support
 
@@ -296,4 +448,4 @@ Copyright © 2019 [FRIN Yvonnick <frin.yvonnick@gmail.com>](https://github.com/f
 This project is [Apache--2.0](https://github.com/frinyvonnick/node-html-to-image/blob/master/LICENSE) licensed.
 
 ***
-_This README was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_
+_The [original version of this README](https://github.com/frinyvonnick/node-html-to-image/blob/master/README.md) was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_

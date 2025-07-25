@@ -1,4 +1,5 @@
 import type { Page, PuppeteerLifeCycleEvent, PuppeteerNodeLaunchOptions } from "puppeteer";
+import { Cluster } from "puppeteer-cluster";
 import type { Screenshot } from "./models/Screenshot";
 
 export type Content = Array<{ output: string; selector?: string }> | object;
@@ -23,7 +24,15 @@ export interface Options extends ScreenshotParams {
   puppeteer?: any,
   waitUntil?: PuppeteerLifeCycleEvent | PuppeteerLifeCycleEvent[];
   beforeScreenshot?: (page: Page) => void;
-  timeout?: number
+  timeout?: number;
+  cluster?: Cluster;
+  clusterOptions?: object;
+  triggerClusterIdleAfterScreenshots?: boolean;
+  triggerClusterCloseAfterScreenshots?: boolean;
+  triggerClusterCloseOnError?: boolean;
+  triggerProcessExitOnError?: boolean;
+  errorLogLinePrefix?: string;
+  errorLogLineAdditionalData?: any;
 }
 
 export interface MakeScreenshotParams {
