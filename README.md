@@ -311,7 +311,9 @@ const nodeHtmlToImage = require('node-html-to-image')
 try {
   const image = await nodeHtmlToImage({
     html: '<html><body><div>Hello</div></body></html>',
-    triggerProcessExitOnError: false, // suppress automatic process.exit(1) behavior on error
+
+    // suppress automatic process.exit(1) behavior on error
+    triggerProcessExitOnError: false,
   });
 } catch (err) {
   // handle the error without terminating the process automatically
@@ -342,9 +344,15 @@ const nodeHtmlToImage = require('node-html-to-image');
   const image = await nodeHtmlToImage({
     html: '<html><body><div>Hello</div></body></html>',
     cluster: screenshotCluster,
-    triggerClusterIdleAfterScreenshots: false, // suppress automatic cluster idling behavior on success
-    triggerClusterCloseAfterScreenshots: false, // suppress automatic cluster closing behavior on success
-    triggerClusterCloseOnError: false, // suppress automatic cluster closing behavior on error
+
+    // suppress automatic cluster idling behavior on success
+    triggerClusterIdleAfterScreenshots: false,
+
+    // suppress automatic cluster closing behavior on success
+    triggerClusterCloseAfterScreenshots: false,
+
+    // suppress automatic cluster closing behavior on error
+    triggerClusterCloseOnError: false,
   });
 
   // idle and close the cluster manually
@@ -374,10 +382,18 @@ const nodeHtmlToImage = require('node-html-to-image');
     const image = await nodeHtmlToImage({
       html: '<html><body><div>Hello</div></body></html>',
       cluster: screenshotCluster,
-      triggerClusterIdleAfterScreenshots: false, // suppress automatic cluster idling behavior on success
-      triggerClusterCloseAfterScreenshots: false, // suppress automatic cluster closing behavior on success
-      triggerClusterCloseOnError: false, // suppress automatic cluster closing behavior on error
-      triggerProcessExitOnError: false, // suppress automatic process.exit(1) behavior on error
+
+      // suppress automatic cluster idling behavior on success
+      triggerClusterIdleAfterScreenshots: false,
+
+      // suppress automatic cluster closing behavior on success
+      triggerClusterCloseAfterScreenshots: false,
+
+      // suppress automatic cluster closing behavior on error
+      triggerClusterCloseOnError: false,
+
+      // suppress automatic process.exit(1) behavior on error
+      triggerProcessExitOnError: false,
     });
   } catch (err) {
     // handle the error gracefully
