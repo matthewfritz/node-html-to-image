@@ -1,5 +1,5 @@
 {
-  "name": "node-html-to-image",
+  "name": "@matthewfritz/node-html-to-image",
   "version": "1.0.0",
   "description": "A Node.js library that generates images from HTML, supporting concurrency and Puppeteer clustering control",
   "main": "dist/index.js",
