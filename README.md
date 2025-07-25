@@ -43,6 +43,8 @@ Much of the documentation has also remained the same with some reorganization an
   - [Using the buffer instead of saving to disk](#using-the-buffer-instead-of-saving-to-disk)
   - [Generating multiple images](#generating-multiple-images)
   - [Using different puppeteer libraries](#using-different-puppeteer-libraries)
+  - [Handling errors instead of terminating the process automatically](#handling-errors-instead-of-terminating-the-process-automatically)
+  - [Using your own puppeteer-cluster instance](#using-your-own-puppteer-cluster-instance)
 - [Run tests](#run-tests)
 - [Related](#related)
   - [Libraries](#libraries)
@@ -295,6 +297,96 @@ const image = await nodeHtmlToImage({
       executablePath: await chrome.executablePath,
   }
 })
+```
+
+### Handling errors instead of terminating the process automatically
+
+You may want to handle errors directly instead of terminating the process by default when a problem has occurred.
+
+For that, we use the `triggerProcessExitOnError` boolean option and then wrap the call in a `try...catch` statement:
+
+```js
+const nodeHtmlToImage = require('node-html-to-image')
+
+try {
+  const image = await nodeHtmlToImage({
+    html: '<html><body><div>Hello</div></body></html>',
+    triggerProcessExitOnError: false, // suppress automatic process.exit(1) behavior on error
+  });
+} catch (err) {
+  // handle the error without terminating the process automatically
+}
+```
+
+### Using your own puppteer-cluster instance
+
+Sometimes you don't want to spawn the default `puppeteer-cluster` instance during the `nodeHtmlToImage()` call but rather use your own.
+
+The way we handle this is to supply the `cluster` option as well set the three `triggerCluster` booleans to `false`.
+
+This means you can have complete control over the concurrent behavior and configuration of the cluster itself:
+
+```js
+const { Cluster } = require('puppeteer-cluster');
+const nodeHtmlToImage = require('node-html-to-image');
+
+(async () => {
+  // start the cluster manually before generating the screenshot
+  // https://github.com/thomasdondorf/puppeteer-cluster#clusterlaunchoptions
+  const screenshotCluster = await Cluster.launch({
+    concurrency: Cluster.CONCURRENCY_CONTEXT,
+    maxConcurrency: 2,
+  });
+
+  // take the screenshot with our custom cluster
+  const image = await nodeHtmlToImage({
+    html: '<html><body><div>Hello</div></body></html>',
+    cluster: screenshotCluster,
+    triggerClusterIdleAfterScreenshots: false, // suppress automatic cluster idling behavior on success
+    triggerClusterCloseAfterScreenshots: false, // suppress automatic cluster closing behavior on success
+    triggerClusterCloseOnError: false, // suppress automatic cluster closing behavior on error
+  });
+
+  // idle and close the cluster manually
+  await cluster.idle();
+  await cluster.close();
+})();
+```
+
+You can of course opt to leave out the booleans and allow `nodeHtmlToImage()` to provide that default functionality. However, the caveat is that you will not be able to re-use the cluster and therefore not be able to support more in-depth distributed operations as a result, as you'll need to start a fresh cluster and therefore a fresh Puppeteer instance each time you want to call the function.
+
+You can also combine this with [handling errors directly instead of exiting the process](#handling-errors-instead-of-terminating-the-process-automatically) to gain additional control when the screenshot operation has failed:
+
+```js
+const { Cluster } = require('puppeteer-cluster');
+const nodeHtmlToImage = require('node-html-to-image');
+
+(async () => {
+  // start the cluster manually before generating the screenshot
+  // https://github.com/thomasdondorf/puppeteer-cluster#clusterlaunchoptions
+  const screenshotCluster = await Cluster.launch({
+    concurrency: Cluster.CONCURRENCY_CONTEXT,
+    maxConcurrency: 2,
+  });
+
+  try {
+    // attempt to take the screenshot with our custom cluster
+    const image = await nodeHtmlToImage({
+      html: '<html><body><div>Hello</div></body></html>',
+      cluster: screenshotCluster,
+      triggerClusterIdleAfterScreenshots: false, // suppress automatic cluster idling behavior on success
+      triggerClusterCloseAfterScreenshots: false, // suppress automatic cluster closing behavior on success
+      triggerClusterCloseOnError: false, // suppress automatic cluster closing behavior on error
+      triggerProcessExitOnError: false, // suppress automatic process.exit(1) behavior on error
+    });
+  } catch (err) {
+    // handle the error gracefully
+  }
+
+  // idle and close the cluster manually
+  await cluster.idle();
+  await cluster.close();
+})();
 ```
 
 ## Run tests
